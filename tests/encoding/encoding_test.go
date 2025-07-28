@@ -31,11 +31,11 @@ func generateTestCertificate(t *testing.T) (*x509.Certificate, *rsa.PrivateKey) 
 			StreetAddress: []string{""},
 			PostalCode:    []string{""},
 		},
-		NotBefore:    time.Now(),
-		NotAfter:     time.Now().Add(365 * 24 * time.Hour),
-		KeyUsage:     x509.KeyUsageKeyEncipherment | x509.KeyUsageDigitalSignature,
-		ExtKeyUsage:  []x509.ExtKeyUsage{x509.ExtKeyUsageServerAuth},
-		DNSNames:     []string{"test.example.com"},
+		NotBefore:   time.Now(),
+		NotAfter:    time.Now().Add(365 * 24 * time.Hour),
+		KeyUsage:    x509.KeyUsageKeyEncipherment | x509.KeyUsageDigitalSignature,
+		ExtKeyUsage: []x509.ExtKeyUsage{x509.ExtKeyUsageServerAuth},
+		DNSNames:    []string{"test.example.com"},
 	}
 
 	certDER, err := x509.CreateCertificate(rand.Reader, template, template, &key.PublicKey, key)
@@ -120,9 +120,9 @@ func TestEncodePrivateKeyToPEM(t *testing.T) {
 
 func TestConvertPEMToDER(t *testing.T) {
 	cert, _ := generateTestCertificate(t)
-	
+
 	pemData, _ := encoding.EncodeCertificateToPEM(cert)
-	
+
 	derData, err := encoding.ConvertPEMToDER(pemData)
 	if err != nil {
 		t.Fatalf("ConvertPEMToDER failed: %v", err)
@@ -135,7 +135,7 @@ func TestConvertPEMToDER(t *testing.T) {
 
 func TestConvertPEMToDER_InvalidPEM(t *testing.T) {
 	invalidPEM := []byte("not a valid PEM")
-	
+
 	_, err := encoding.ConvertPEMToDER(invalidPEM)
 	if err == nil {
 		t.Error("ConvertPEMToDER should fail with invalid PEM")
@@ -144,9 +144,9 @@ func TestConvertPEMToDER_InvalidPEM(t *testing.T) {
 
 func TestEncodeDERToBase64(t *testing.T) {
 	testData := []byte("test DER data")
-	
+
 	base64Data := encoding.EncodeDERToBase64(testData)
-	
+
 	// Verify it's valid base64
 	decoded, err := base64.StdEncoding.DecodeString(base64Data)
 	if err != nil {
@@ -160,7 +160,7 @@ func TestEncodeDERToBase64(t *testing.T) {
 
 func TestConvertCertificateToBase64DER(t *testing.T) {
 	cert, _ := generateTestCertificate(t)
-	
+
 	base64Data, err := encoding.ConvertCertificateToBase64DER(cert)
 	if err != nil {
 		t.Fatalf("ConvertCertificateToBase64DER failed: %v", err)
@@ -180,7 +180,7 @@ func TestConvertCertificateToBase64DER(t *testing.T) {
 func TestDecodePEMCertificate(t *testing.T) {
 	cert, _ := generateTestCertificate(t)
 	pemData, _ := encoding.EncodeCertificateToPEM(cert)
-	
+
 	decodedCert, err := encoding.DecodePEMCertificate(pemData)
 	if err != nil {
 		t.Fatalf("DecodePEMCertificate failed: %v", err)
@@ -219,7 +219,7 @@ MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgevZzL1gdAFr88hb2
 func TestDecodePEMPrivateKey(t *testing.T) {
 	_, key := generateTestCertificate(t)
 	pemData, _ := encoding.EncodePrivateKeyToPEM(key)
-	
+
 	decodedKey, err := encoding.DecodePEMPrivateKey(pemData)
 	if err != nil {
 		t.Fatalf("DecodePEMPrivateKey failed: %v", err)
@@ -258,7 +258,7 @@ MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgevZzL1gdAFr88hb2
 func TestRoundTripCertificate(t *testing.T) {
 	// Test full round trip: cert -> PEM -> DER -> Base64 and back
 	cert, _ := generateTestCertificate(t)
-	
+
 	// Encode to PEM
 	pemData, err := encoding.EncodeCertificateToPEM(cert)
 	if err != nil {

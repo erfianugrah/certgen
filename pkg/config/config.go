@@ -20,7 +20,7 @@ type CertificateConfig struct {
 
 type Subject struct {
 	Country            string
-	State              string 
+	State              string
 	Locality           string
 	Organization       string
 	OrganizationalUnit string
@@ -28,19 +28,19 @@ type Subject struct {
 }
 
 type CertificateOptions struct {
-	Subject      Subject
-	DNSNames     []string
-	ValidFrom    time.Time
-	ValidFor     time.Duration
-	IsCA         bool
-	KeyUsage     []string
-	ExtKeyUsage  []string
+	Subject     Subject
+	DNSNames    []string
+	ValidFrom   time.Time
+	ValidFor    time.Duration
+	IsCA        bool
+	KeyUsage    []string
+	ExtKeyUsage []string
 }
 
 func NewCertificateConfig() *CertificateConfig {
 	return &CertificateConfig{
 		Country:            "SG",
-		State:              "Singapore", 
+		State:              "Singapore",
 		Locality:           "Singapore",
 		Organization:       "Erfi Corp",
 		OrganizationalUnit: "Erfi Proxy",

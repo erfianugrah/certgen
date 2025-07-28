@@ -44,12 +44,12 @@ func (g *Generator) GenerateRootCA() (*x509.Certificate, *rsa.PrivateKey, error)
 	}
 
 	opts := g.config.GetRootCAOptions()
-	
+
 	serialNumber, err := rand.Int(rand.Reader, new(big.Int).Lsh(big.NewInt(1), 128))
 	if err != nil {
 		return nil, nil, fmt.Errorf("failed to generate serial number: %w", err)
 	}
-	
+
 	template := &x509.Certificate{
 		SerialNumber: serialNumber,
 		Subject: pkix.Name{
@@ -89,7 +89,7 @@ func (g *Generator) GenerateLeafCertificate(caCert *x509.Certificate, caKey *rsa
 	}
 
 	opts := g.config.GetLeafCertOptions()
-	
+
 	serialNumber, err := rand.Int(rand.Reader, new(big.Int).Lsh(big.NewInt(1), 128))
 	if err != nil {
 		return nil, nil, fmt.Errorf("failed to generate serial number: %w", err)
@@ -105,11 +105,11 @@ func (g *Generator) GenerateLeafCertificate(caCert *x509.Certificate, caKey *rsa
 			OrganizationalUnit: []string{opts.Subject.OrganizationalUnit},
 			CommonName:         opts.Subject.CommonName,
 		},
-		NotBefore:    opts.ValidFrom,
-		NotAfter:     opts.ValidFrom.Add(opts.ValidFor),
-		KeyUsage:     x509.KeyUsageDigitalSignature | x509.KeyUsageKeyEncipherment,
-		ExtKeyUsage:  []x509.ExtKeyUsage{x509.ExtKeyUsageServerAuth, x509.ExtKeyUsageClientAuth},
-		DNSNames:     opts.DNSNames,
+		NotBefore:   opts.ValidFrom,
+		NotAfter:    opts.ValidFrom.Add(opts.ValidFor),
+		KeyUsage:    x509.KeyUsageDigitalSignature | x509.KeyUsageKeyEncipherment,
+		ExtKeyUsage: []x509.ExtKeyUsage{x509.ExtKeyUsageServerAuth, x509.ExtKeyUsageClientAuth},
+		DNSNames:    opts.DNSNames,
 	}
 
 	certDER, err := x509.CreateCertificate(rand.Reader, template, caCert, &key.PublicKey, caKey)
@@ -127,7 +127,7 @@ func (g *Generator) GenerateLeafCertificate(caCert *x509.Certificate, caKey *rsa
 
 func (g *Generator) GenerateCertificateRequest(key *rsa.PrivateKey) (*x509.CertificateRequest, error) {
 	opts := g.config.GetLeafCertOptions()
-	
+
 	template := &x509.CertificateRequest{
 		Subject: pkix.Name{
 			Country:            []string{opts.Subject.Country},

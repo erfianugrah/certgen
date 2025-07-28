@@ -141,7 +141,7 @@ func TestFullCertificateGeneration(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to read root certificate: %v", err)
 	}
-	
+
 	decodedRootCert, err := encoding.DecodePEMCertificate(rootCertData)
 	if err != nil {
 		t.Fatalf("Failed to decode root certificate: %v", err)
@@ -295,7 +295,7 @@ func TestErrorHandling(t *testing.T) {
 
 		fileWriter := fileio.NewFileWriter("readonly.test")
 		testPath := filepath.Join(readOnlyDir, "test.pem")
-		
+
 		err = fileWriter.WriteFile(testPath, []byte("test"))
 		if err == nil {
 			t.Error("WriteFile should fail in read-only directory")

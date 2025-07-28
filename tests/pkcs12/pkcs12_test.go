@@ -56,11 +56,11 @@ func generateTestCertificates(t *testing.T) (*x509.Certificate, *rsa.PrivateKey,
 			Organization: []string{"Test Leaf"},
 			Country:      []string{"US"},
 		},
-		NotBefore:    time.Now(),
-		NotAfter:     time.Now().Add(90 * 24 * time.Hour),
-		KeyUsage:     x509.KeyUsageKeyEncipherment | x509.KeyUsageDigitalSignature,
-		ExtKeyUsage:  []x509.ExtKeyUsage{x509.ExtKeyUsageServerAuth},
-		DNSNames:     []string{"test.example.com"},
+		NotBefore:   time.Now(),
+		NotAfter:    time.Now().Add(90 * 24 * time.Hour),
+		KeyUsage:    x509.KeyUsageKeyEncipherment | x509.KeyUsageDigitalSignature,
+		ExtKeyUsage: []x509.ExtKeyUsage{x509.ExtKeyUsageServerAuth},
+		DNSNames:    []string{"test.example.com"},
 	}
 
 	leafCertDER, err := x509.CreateCertificate(rand.Reader, leafTemplate, caCert, &leafKey.PublicKey, caKey)
@@ -130,7 +130,7 @@ func TestGeneratePKCS12_EmptyPassword(t *testing.T) {
 
 	gen := pkcs12.NewGenerator()
 	leafCert, leafKey, caCert, _ := generateTestCertificates(t)
-	
+
 	// Test with empty password
 	pfxData, err := gen.GeneratePKCS12(leafCert, leafKey, caCert, "")
 	if err != nil {
@@ -147,7 +147,7 @@ func TestGeneratePKCS12_LongPassword(t *testing.T) {
 
 	gen := pkcs12.NewGenerator()
 	leafCert, leafKey, caCert, _ := generateTestCertificates(t)
-	
+
 	// Test with very long password
 	longPassword := "this_is_a_very_long_password_that_should_still_work_correctly_1234567890"
 	pfxData, err := gen.GeneratePKCS12(leafCert, leafKey, caCert, longPassword)
@@ -165,7 +165,7 @@ func TestGeneratePKCS12_SpecialCharactersPassword(t *testing.T) {
 
 	gen := pkcs12.NewGenerator()
 	leafCert, leafKey, caCert, _ := generateTestCertificates(t)
-	
+
 	// Test with special characters in password
 	specialPassword := "p@$$w0rd!#%&*()[]{}|\\:;\"'<>,.?/"
 	pfxData, err := gen.GeneratePKCS12(leafCert, leafKey, caCert, specialPassword)
@@ -183,7 +183,7 @@ func TestGeneratePKCS12_NilCertificate(t *testing.T) {
 
 	gen := pkcs12.NewGenerator()
 	_, leafKey, caCert, _ := generateTestCertificates(t)
-	
+
 	// This should fail during encoding
 	_, err := gen.GeneratePKCS12(nil, leafKey, caCert, "password")
 	if err == nil {
@@ -196,7 +196,7 @@ func TestGeneratePKCS12_NilKey(t *testing.T) {
 
 	gen := pkcs12.NewGenerator()
 	leafCert, _, caCert, _ := generateTestCertificates(t)
-	
+
 	// This should fail during encoding
 	_, err := gen.GeneratePKCS12(leafCert, nil, caCert, "password")
 	if err == nil {
@@ -209,7 +209,7 @@ func TestGeneratePKCS12_NilCACert(t *testing.T) {
 
 	gen := pkcs12.NewGenerator()
 	leafCert, leafKey, _, _ := generateTestCertificates(t)
-	
+
 	// This should still work without CA cert
 	pfxData, err := gen.GeneratePKCS12(leafCert, leafKey, nil, "password")
 	if err != nil {
@@ -225,10 +225,10 @@ func TestGeneratePKCS12_MultipleCertificates(t *testing.T) {
 	checkOpenSSL(t)
 
 	gen := pkcs12.NewGenerator()
-	
+
 	// Generate multiple certificates
 	leafCert1, leafKey1, caCert, _ := generateTestCertificates(t)
-	
+
 	// Test with first certificate
 	pfxData1, err := gen.GeneratePKCS12(leafCert1, leafKey1, caCert, "password1")
 	if err != nil {
@@ -237,7 +237,7 @@ func TestGeneratePKCS12_MultipleCertificates(t *testing.T) {
 
 	// Generate another certificate
 	leafCert2, leafKey2, _, _ := generateTestCertificates(t)
-	
+
 	// Test with second certificate
 	pfxData2, err := gen.GeneratePKCS12(leafCert2, leafKey2, caCert, "password2")
 	if err != nil {

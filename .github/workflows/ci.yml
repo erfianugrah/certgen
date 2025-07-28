@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        go-version: [1.21.x, 1.22.x]
+        go-version: [1.21.x, 1.22.x, 1.23.x]
 
     steps:
     - name: Checkout code
@@ -22,12 +22,30 @@ jobs:
       uses: actions/setup-go@v5
       with:
         go-version: ${{ matrix.go-version }}
+        cache: true
 
     - name: Install dependencies
       run: |
         sudo apt-get update
         sudo apt-get install -y openssl
         make deps
+
+    - name: Check code formatting
+      run: |
+        if [ "$(gofmt -s -l . | wc -l)" -gt 0 ]; then
+          echo "Code not formatted. Run 'make fmt' to fix."
+          gofmt -s -d .
+          exit 1
+        fi
+
+    - name: Run go vet
+      run: make vet
+
+    - name: Run staticcheck
+      uses: dominikh/staticcheck-action@v1
+      with:
+        version: "latest"
+        install-go: false
 
     - name: Run tests
       run: make test
@@ -38,13 +56,14 @@ jobs:
     - name: Generate coverage report
       run: make test-coverage-report
 
-    - name: Check code formatting
-      run: |
-        make fmt
-        git diff --exit-code
-
-    - name: Run go vet
-      run: make vet
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v4
+      if: matrix.go-version == '1.22.x'
+      with:
+        files: ./coverage.out
+        flags: unittests
+        name: codecov-umbrella
+        fail_ci_if_error: false
 
   build:
     name: Build
@@ -58,7 +77,8 @@ jobs:
     - name: Set up Go
       uses: actions/setup-go@v5
       with:
-        go-version: 1.21.x
+        go-version: 1.22.x
+        cache: true
 
     - name: Build binary
       run: make build
@@ -76,3 +96,44 @@ jobs:
       with:
         name: release-binaries
         path: certgen-*
+        retention-days: 7
+
+  security:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@0.24.0
+      with:
+        scan-type: 'fs'
+        ignore-unfixed: true
+        format: 'sarif'
+        output: 'trivy-results.sarif'
+
+    - name: Upload Trivy scan results to GitHub Security tab
+      uses: github/codeql-action/upload-sarif@v3
+      if: always()
+      with:
+        sarif_file: 'trivy-results.sarif'
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: 1.22.x
+        cache: true
+
+    - name: golangci-lint
+      uses: golangci/golangci-lint-action@v6
+      with:
+        version: latest
+        args: --timeout=5m

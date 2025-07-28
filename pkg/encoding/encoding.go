@@ -29,7 +29,7 @@ func EncodePrivateKeyToPEM(key *rsa.PrivateKey) ([]byte, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to marshal private key: %w", err)
 	}
-	
+
 	pemBlock := &pem.Block{
 		Type:  "PRIVATE KEY",
 		Bytes: keyBytes,
@@ -58,12 +58,12 @@ func DecodePEMCertificate(pemData []byte) (*x509.Certificate, error) {
 	if block == nil {
 		return nil, fmt.Errorf("failed to parse PEM block")
 	}
-	
+
 	cert, err := x509.ParseCertificate(block.Bytes)
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse certificate: %w", err)
 	}
-	
+
 	return cert, nil
 }
 
@@ -72,16 +72,16 @@ func DecodePEMPrivateKey(pemData []byte) (*rsa.PrivateKey, error) {
 	if block == nil {
 		return nil, fmt.Errorf("failed to parse PEM block")
 	}
-	
+
 	key, err := x509.ParsePKCS8PrivateKey(block.Bytes)
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse private key: %w", err)
 	}
-	
+
 	rsaKey, ok := key.(*rsa.PrivateKey)
 	if !ok {
 		return nil, fmt.Errorf("key is not an RSA private key")
 	}
-	
+
 	return rsaKey, nil
 }

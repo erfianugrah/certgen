@@ -182,7 +182,7 @@ func TestFileWriter_ReadFile(t *testing.T) {
 
 func TestFileWriter_ReadFile_NotExist(t *testing.T) {
 	fw := fileio.NewFileWriter("test.com")
-	
+
 	_, err := fw.ReadFile("/non/existent/file.txt")
 	if err == nil {
 		t.Error("ReadFile should return error for non-existent file")
@@ -229,8 +229,8 @@ func TestFileWriter_FileExists(t *testing.T) {
 
 func TestFileWriter_ComplexDomain(t *testing.T) {
 	tests := []struct {
-		domain           string
-		expectedPrefix   string
+		domain         string
+		expectedPrefix string
 	}{
 		{"simple.com", "simple"},
 		{"sub.domain.com", "sub"},
@@ -244,7 +244,7 @@ func TestFileWriter_ComplexDomain(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.domain, func(t *testing.T) {
 			fw := fileio.NewFileWriter(tt.domain)
-			
+
 			// Test that paths use the correct prefix
 			rootKeyPath := fw.GetRootKeyPath()
 			expectedPath := tt.expectedPrefix + "_rootCA.key"

@@ -32,7 +32,7 @@ func main() {
 	flag.IntVar(&cfg.ValidityDays, "days", cfg.ValidityDays, "Validity period for the leaf certificate")
 	flag.StringVar(&cfg.PKCS12Password, "p12-password", cfg.PKCS12Password, "Password for PKCS#12 file")
 	flag.BoolVar(&showVersion, "version", false, "Show version information")
-	
+
 	flag.Usage = func() {
 		fmt.Fprintf(os.Stderr, "Certificate Generator v%s\n\n", version)
 		fmt.Fprintf(os.Stderr, "Usage: %s [options]\n\n", os.Args[0])
@@ -41,7 +41,7 @@ func main() {
 		fmt.Fprintf(os.Stderr, "\nExample:\n")
 		fmt.Fprintf(os.Stderr, "  %s --domain example.com --organization \"My Company\" --days 365\n", os.Args[0])
 	}
-	
+
 	flag.Parse()
 
 	if showVersion {

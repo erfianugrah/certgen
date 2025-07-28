@@ -74,4 +74,3 @@ func (g *Generator) GeneratePKCS12(leafCert *x509.Certificate, leafKey *rsa.Priv
 
 	return pfxData, nil
 }
-
