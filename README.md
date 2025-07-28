@@ -327,6 +327,36 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
+## Release Process
+
+To create a new release:
+
+1. **Create a signed tag** with semantic versioning:
+   ```bash
+   git tag -s v1.0.4 -m "Release description"
+   ```
+
+2. **Push the tag** to trigger the release workflow:
+   ```bash
+   git push origin v1.0.4
+   ```
+
+3. The GitHub Actions workflow will automatically:
+   - Run all tests
+   - Build binaries for multiple platforms (Linux, macOS, Windows)
+   - Create a GitHub release with:
+     - Auto-generated changelog
+     - Binary artifacts
+     - Checksums file
+
+### Version Numbering
+
+Follow [Semantic Versioning](https://semver.org/):
+- `MAJOR.MINOR.PATCH` (e.g., v1.0.4)
+- Increment MAJOR for breaking changes
+- Increment MINOR for new features
+- Increment PATCH for bug fixes
+
 ## TODO
 
 - [x] Add comprehensive unit tests for all packages (85.3% coverage achieved)
