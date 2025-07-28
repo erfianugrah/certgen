@@ -66,7 +66,7 @@ func TestEncodeCertificateToPEM(t *testing.T) {
 	// Verify it's valid PEM
 	block, _ := pem.Decode(pemData)
 	if block == nil {
-		t.Error("Failed to decode PEM block")
+		t.Fatal("Failed to decode PEM block")
 	}
 
 	if block.Type != "CERTIFICATE" {
@@ -94,7 +94,7 @@ func TestEncodePrivateKeyToPEM(t *testing.T) {
 	// Verify it's valid PEM
 	block, _ := pem.Decode(pemData)
 	if block == nil {
-		t.Error("Failed to decode PEM block")
+		t.Fatal("Failed to decode PEM block")
 	}
 
 	if block.Type != "PRIVATE KEY" {

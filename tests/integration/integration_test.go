@@ -23,8 +23,14 @@ func TestFullCertificateGeneration(t *testing.T) {
 
 	// Change to temp directory
 	originalDir, _ := os.Getwd()
-	os.Chdir(tempDir)
-	defer os.Chdir(originalDir)
+	if err := os.Chdir(tempDir); err != nil {
+		t.Fatalf("Failed to change directory: %v", err)
+	}
+	defer func() {
+		if err := os.Chdir(originalDir); err != nil {
+			t.Errorf("Failed to restore directory: %v", err)
+		}
+	}()
 
 	// Configure certificate generation
 	cfg := config.NewCertificateConfig()
@@ -178,8 +184,14 @@ func TestMultipleDomainGeneration(t *testing.T) {
 
 	// Change to temp directory
 	originalDir, _ := os.Getwd()
-	os.Chdir(tempDir)
-	defer os.Chdir(originalDir)
+	if err := os.Chdir(tempDir); err != nil {
+		t.Fatalf("Failed to change directory: %v", err)
+	}
+	defer func() {
+		if err := os.Chdir(originalDir); err != nil {
+			t.Errorf("Failed to restore directory: %v", err)
+		}
+	}()
 
 	domains := []string{
 		"first.test.local",
@@ -291,7 +303,9 @@ func TestErrorHandling(t *testing.T) {
 		defer os.RemoveAll(readOnlyDir)
 
 		// Make directory read-only
-		os.Chmod(readOnlyDir, 0555)
+		if err := os.Chmod(readOnlyDir, 0555); err != nil {
+			t.Fatalf("Failed to chmod directory: %v", err)
+		}
 
 		fileWriter := fileio.NewFileWriter("readonly.test")
 		testPath := filepath.Join(readOnlyDir, "test.pem")
