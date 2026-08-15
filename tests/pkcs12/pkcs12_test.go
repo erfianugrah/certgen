@@ -111,7 +111,7 @@ func TestGeneratePKCS12(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create temp file: %v", err)
 	}
-	defer os.Remove(tempFile.Name())
+	defer func() { _ = os.Remove(tempFile.Name()) }()
 
 	if err := os.WriteFile(tempFile.Name(), pfxData, 0644); err != nil {
 		t.Fatalf("Failed to write PKCS#12 file: %v", err)

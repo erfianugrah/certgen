@@ -31,7 +31,7 @@ func (g *Generator) GeneratePKCS12(leafCert *x509.Certificate, leafKey *rsa.Priv
 	if err != nil {
 		return nil, fmt.Errorf("failed to create temp dir: %w", err)
 	}
-	defer os.RemoveAll(tempDir)
+	defer func() { _ = os.RemoveAll(tempDir) }()
 
 	leafCertPath := filepath.Join(tempDir, "leaf.pem")
 	leafKeyPath := filepath.Join(tempDir, "leaf.key")

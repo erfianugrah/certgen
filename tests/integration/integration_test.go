@@ -19,7 +19,7 @@ func TestFullCertificateGeneration(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create temp dir: %v", err)
 	}
-	defer os.RemoveAll(tempDir)
+	defer func() { _ = os.RemoveAll(tempDir) }()
 
 	// Change to temp directory
 	originalDir, _ := os.Getwd()
@@ -180,7 +180,7 @@ func TestMultipleDomainGeneration(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create temp dir: %v", err)
 	}
-	defer os.RemoveAll(tempDir)
+	defer func() { _ = os.RemoveAll(tempDir) }()
 
 	// Change to temp directory
 	originalDir, _ := os.Getwd()
@@ -300,7 +300,7 @@ func TestErrorHandling(t *testing.T) {
 		if err != nil {
 			t.Fatalf("Failed to create temp dir: %v", err)
 		}
-		defer os.RemoveAll(readOnlyDir)
+		defer func() { _ = os.RemoveAll(readOnlyDir) }()
 
 		// Make directory read-only
 		if err := os.Chmod(readOnlyDir, 0555); err != nil {
