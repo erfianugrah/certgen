@@ -65,7 +65,7 @@ func TestFileWriter_WriteFile(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create temp dir: %v", err)
 	}
-	defer os.RemoveAll(tempDir)
+	defer func() { _ = os.RemoveAll(tempDir) }()
 
 	fw := fileio.NewFileWriter("test.com")
 	testData := []byte("test file content")
@@ -99,7 +99,7 @@ func TestFileWriter_WriteFile_CreateDirectory(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create temp dir: %v", err)
 	}
-	defer os.RemoveAll(tempDir)
+	defer func() { _ = os.RemoveAll(tempDir) }()
 
 	fw := fileio.NewFileWriter("test.com")
 	testData := []byte("test content")
@@ -123,7 +123,7 @@ func TestFileWriter_WriteBase64File(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create temp dir: %v", err)
 	}
-	defer os.RemoveAll(tempDir)
+	defer func() { _ = os.RemoveAll(tempDir) }()
 
 	fw := fileio.NewFileWriter("test.com")
 	base64Data := "VGVzdCBiYXNlNjQgZGF0YQ=="
@@ -157,7 +157,7 @@ func TestFileWriter_ReadFile(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create temp dir: %v", err)
 	}
-	defer os.RemoveAll(tempDir)
+	defer func() { _ = os.RemoveAll(tempDir) }()
 
 	fw := fileio.NewFileWriter("test.com")
 	testData := []byte("test read content")
@@ -195,7 +195,7 @@ func TestFileWriter_FileExists(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create temp dir: %v", err)
 	}
-	defer os.RemoveAll(tempDir)
+	defer func() { _ = os.RemoveAll(tempDir) }()
 
 	fw := fileio.NewFileWriter("test.com")
 	existingFile := filepath.Join(tempDir, "exists.txt")
@@ -261,7 +261,7 @@ func TestFileWriter_WriteFile_Permissions(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create temp dir: %v", err)
 	}
-	defer os.RemoveAll(tempDir)
+	defer func() { _ = os.RemoveAll(tempDir) }()
 
 	fw := fileio.NewFileWriter("test.com")
 	testPath := filepath.Join(tempDir, "test_perms.txt")
